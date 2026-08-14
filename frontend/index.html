@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Task & Project Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>TaskFlow</h1>
+                <p class="tagline">Project Management</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-view="dashboard">
+                    📊 Dashboard
+                </button>
+                <button class="nav-btn" data-view="users">
+                    👥 Users
+                </button>
+                <button class="nav-btn" data-view="projects">
+                    📁 Projects
+                </button>
+                <button class="nav-btn" data-view="tasks">
+                    ✓ Tasks
+                </button>
+                <button class="nav-btn" data-view="search">
+                    🔍 Search
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p class="api-status">
+                    API Status: <span id="api-status">Checking...</span>
+                </p>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view active">
+                <div class="header">
+                    <h2>Dashboard</h2>
+                </div>
+                
+                <div class="stats-grid" id="stats-container">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-users">0</span>
+                        <span class="stat-label">Users</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-projects">0</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-tasks">0</span>
+                        <span class="stat-label">Tasks</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-completed">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-pending">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-high-priority">0</span>
+                        <span class="stat-label">High Priority</span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Users View -->
+            <section id="users" class="view">
+                <div class="header">
+                    <h2>Users</h2>
+                    <button class="btn btn-primary" id="create-user-btn">+ New User</button>
+                </div>
+                
+                <div id="user-form-container" class="form-container hidden">
+                    <form id="user-form" class="form">
+                        <div class="form-group">
+                            <label for="user-email">Email</label>
+                            <input type="email" id="user-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-name">Name</label>
+                            <input type="text" id="user-name">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">Create User</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-user-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="users-list" class="list-container">
+                    <p class="empty-message">No users found</p>
+                </div>
+            </section>
+            
+            <!-- Projects View -->
+            <section id="projects" class="view">
+                <div class="header">
+                    <h2>Projects</h2>
+                    <button class="btn btn-primary" id="create-project-btn">+ New Project</button>
+                </div>
+                
+                <div id="project-form-container" class="form-container hidden">
+                    <form id="project-form" class="form">
+                        <div class="form-group">
+                            <label for="project-name">Project Name</label>
+                            <input type="text" id="project-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-owner">Owner</label>
+                            <select id="project-owner" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="project-description">Description</label>
+                            <textarea id="project-description"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">Create Project</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-project-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="projects-list" class="list-container">
+                    <p class="empty-message">No projects found</p>
+                </div>
+            </section>
+            
+            <!-- Tasks View -->
+            <section id="tasks" class="view">
+                <div class="header">
+                    <h2>Tasks</h2>
+                    <button class="btn btn-primary" id="create-task-btn">+ New Task</button>
+                </div>
+                
+                <div class="task-controls">
+                    <div class="form-group">
+                        <label for="filter-project">Filter by Project:</label>
+                        <select id="filter-project">
+                            <option value="">All Projects</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sort-tasks">Sort By:</label>
+                        <select id="sort-tasks">
+                            <option value="">Default</option>
+                            <option value="priority">Priority (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="task-form-container" class="form-container hidden">
+                    <form id="task-form" class="form">
+                        <div class="form-group">
+                            <label for="task-title">Task Title</label>
+                            <input type="text" id="task-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-project">Project</label>
+                            <select id="task-project" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-priority">Priority</label>
+                            <select id="task-priority">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="task-due-date">Due Date</label>
+                            <input type="text" id="task-due-date" placeholder="e.g., 2026-12-31 or Tomorrow">
+                        </div>
+                        <div class="form-group">
+                            <label for="task-description">Description</label>
+                            <textarea id="task-description"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">Create Task</button>
+                            <button type="button" class="btn btn-secondary" id="cancel-task-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="tasks-list" class="list-container">
+                    <p class="empty-message">No tasks found</p>
+                </div>
+            </section>
+            
+            <!-- Search View -->
+            <section id="search" class="view">
+                <div class="header">
+                    <h2>Search Tasks</h2>
+                </div>
+                
+                <div class="search-controls">
+                    <div class="form-group">
+                        <label for="search-term">Search Term</label>
+                        <input type="text" id="search-term" placeholder="Enter task title or description">
+                    </div>
+                    <div class="form-group">
+                        <label for="search-algo">Algorithm</label>
+                        <select id="search-algo">
+                            <option value="linear">Linear Search</option>
+                            <option value="binary">Binary Search</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="search-btn">Search</button>
+                </div>
+                
+                <div id="search-stats" class="search-stats hidden">
+                    <h3>Algorithm Statistics</h3>
+                    <div class="stats-row">
+                        <span>Comparisons: <strong id="stat-comparisons">0</strong></span>
+                        <span>Assignments: <strong id="stat-assignments">0</strong></span>
+                        <span>Swaps: <strong id="stat-swaps">0</strong></span>
+                        <span>Iterations: <strong id="stat-iterations">0</strong></span>
+                    </div>
+                </div>
+                
+                <div id="search-results" class="list-container">
+                    <p class="empty-message">Perform a search to see results</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
