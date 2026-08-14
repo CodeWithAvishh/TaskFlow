@@ -1,7 +1,6 @@
 // TaskFlow Frontend JavaScript
 
-const API_BASE = 'http://localhost:8000';
-
+const API_BASE = 'https://taskflow-92ta.onrender.com';
 // ==================== State Management ====================
 
 const state = {
